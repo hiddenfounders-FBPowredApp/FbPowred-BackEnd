@@ -10,19 +10,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Email;
+
 @Entity
 @Table(name="user")
 public class User implements Serializable{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@NotNull
+	@GeneratedValue
+
+	@Column(name ="id", unique=true)
 	private Long id;
 	
 	@Column(name="username")
 	private String username;
 	
-	@Column(name="email")
+	@Email
+	@Column(name="email", unique=true)
 	private String email;
 	
 	@Column(name="password")
@@ -40,8 +44,6 @@ public class User implements Serializable{
 		this.password = password;
 	}
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
