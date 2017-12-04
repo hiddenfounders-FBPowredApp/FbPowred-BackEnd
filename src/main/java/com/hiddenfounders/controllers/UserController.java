@@ -1,6 +1,8 @@
 package com.hiddenfounders.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +19,14 @@ public class UserController {
 	
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
 	@CrossOrigin
 	@RequestMapping(value= ApiUrls.NEW_ACCOUNT, method=RequestMethod.POST)
 	public boolean createAccount(@RequestBody User user) {
 		try {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			userDao.save(user);
 			return true;
 		}catch(Exception e){

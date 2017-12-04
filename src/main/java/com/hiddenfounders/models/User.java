@@ -1,6 +1,9 @@
 package com.hiddenfounders.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,10 +14,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name="user")
-public class User implements Serializable{
+public class User implements UserDetails, Serializable{
 	
 	@Id
 	@GeneratedValue
@@ -31,6 +36,9 @@ public class User implements Serializable{
 	
 	@Column(name="password")
 	private String password;
+
+	@Column(name = "enabled", nullable = false)
+	private boolean enabled;
 	
 	public User() {
 		super();
@@ -42,6 +50,7 @@ public class User implements Serializable{
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.enabled = true;
 	}
 	
 	public Long getId() {
@@ -56,6 +65,26 @@ public class User implements Serializable{
 		return username;
 	}
 
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -68,6 +97,12 @@ public class User implements Serializable{
 		this.email = email;
 	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		return authorities;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -75,5 +110,7 @@ public class User implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+
 	
 }
